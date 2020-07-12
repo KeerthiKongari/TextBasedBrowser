@@ -1,8 +1,6 @@
-import sys, os
- 
-args = sys.argv
-dir_name = args[1]
-tabs_list = []
+from collections import deque
+import sys
+import os
  
 nytimes_com = '''
 This New Liquid Is Magnetic, and Mesmerizing
@@ -39,23 +37,38 @@ Twitter and Square Chief Executive Officer Jack Dorsey
  Tuesday, a signal of the strong ties between the Silicon Valley giants.
 '''
  
-if not os.path.exists(dir_name):
-    os.mkdir(dir_name)
+# write your code here
+name_folder = sys.argv[1]
+if not os.path.exists(name_folder):
+    os.mkdir(name_folder)
  
+history = deque()
 while True:
-    site = input()
-    if site == "exit":
-        break
+    url = input()
  
-    if "." not in site:
-        print("Error: Incorrect URL")
-    elif site == "bloomberg.com":
-        with open(f"{dir_name}/bloomberg", "w") as f:
-            f.write(bloomberg_com)
-        print(bloomberg_com)
-    elif site == "nytimes.com":
-        with open(f"{dir_name}/nytimes", "w") as f:
-            f.write(nytimes_com)
-        print(nytimes_com)
+    if '.' in url:
+        path = os.path.join(name_folder, '.'.join(url.split('.')[:-1]))
+        if 'bloomberg' in url:
+            history.append('bloomberg')
+            with open(path, 'w', encoding='utf-8') as file:
+                file.write(bloomberg_com)
+                print(bloomberg_com)
+        elif 'nytimes' in url:
+            history.append('nytimes')
+            with open(path, 'w', encoding='utf-8') as file:
+                file.write(nytimes_com)
+                print(nytimes_com)
+        else:
+            print('error')
     else:
-        print("Error: NotFound")
+        if url == 'exit':
+            sys.exit()
+        if url == 'back':
+            history.pop()
+            url = history.pop()
+        try:
+            path = os.path.join(name_folder, url)
+            with open(path, 'r', encoding='utf-8') as file:
+                print(file.read())
+        except FileNotFoundError:
+            print('error')

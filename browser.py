@@ -1,4 +1,10 @@
-nytimes_com='''
+import sys, os
+ 
+args = sys.argv
+dir_name = args[1]
+tabs_list = []
+ 
+nytimes_com = '''
 This New Liquid Is Magnetic, and Mesmerizing
  
 Scientists have created “soft” magnets that can flow 
@@ -33,12 +39,23 @@ Twitter and Square Chief Executive Officer Jack Dorsey
  Tuesday, a signal of the strong ties between the Silicon Valley giants.
 '''
  
-# write your code here
+if not os.path.exists(dir_name):
+    os.mkdir(dir_name)
+ 
 while True:
-    n = input()
-    if n == "bloomberg.com":
-        print(bloomberg_com)
-    elif n == "nytimes.com":
-        print(nytimes_com)
-    elif n == "exit":
+    site = input()
+    if site == "exit":
         break
+ 
+    if "." not in site:
+        print("Error: Incorrect URL")
+    elif site == "bloomberg.com":
+        with open(f"{dir_name}/bloomberg", "w") as f:
+            f.write(bloomberg_com)
+        print(bloomberg_com)
+    elif site == "nytimes.com":
+        with open(f"{dir_name}/nytimes", "w") as f:
+            f.write(nytimes_com)
+        print(nytimes_com)
+    else:
+        print("Error: NotFound")
